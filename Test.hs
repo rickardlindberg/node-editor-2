@@ -1,3 +1,5 @@
+import qualified Data.Map as M
+
 import Test.Hspec
 
 import NodeEditor
@@ -9,8 +11,23 @@ main = hspec $ do
 
         it "can read nodes from file" $ do
             tree <- loadFile "NodeEditor.hs"
-            (body (getNode 1 tree)) `shouldBe` "module NodeEditor where"
+            treeContainsNodeWithBody "module NodeEditor where" tree `shouldBe` True
 
         it "can read nodes from file" $ do
             tree <- loadFile "NodeEditor.hs"
-            (body (getNode 2 tree)) `shouldBe` "import qualified Data.Map as M"
+            treeContainsNodeWithBody "import qualified Data.Map as M" tree `shouldBe` True
+
+    describe "lines to tree conversion" $ do
+
+        it "can convert" $ do
+            let lines = [ "line one"
+                        , ""
+                        , "line two"
+                        ]
+            let tree = linesToTree lines
+            treeContainsNodeWithBody "line one" tree `shouldBe` True
+            treeContainsNodeWithBody "line two" tree `shouldBe` True
+
+treeContainsNodeWithBody :: String -> Tree -> Bool
+treeContainsNodeWithBody bodyToLookFor (Tree nodes) =
+    not $ M.null $ M.filter (\node -> body node == bodyToLookFor) nodes

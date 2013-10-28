@@ -19,13 +19,23 @@ getNode :: Int -> Tree -> Node
 getNode id (Tree nodes) =
     case (M.lookup id nodes) of
         Just node -> node
-        Nothing -> Node 0 "" ""
+        Nothing -> Node 0 "" "default node"
 
 addNode :: Node -> Tree -> Tree
 addNode node (Tree nodes) = Tree (M.insert (nodeId node) node nodes)
 
+linesToTree :: [String] -> Tree
+linesToTree [] = emptyTree
+linesToTree (line:restLines) =
+    let restTree = linesToTree restLines
+    in if line == ""
+        then restTree
+        else addNode (Node (getNextId restTree) "" line) restTree
+
+getNextId :: Tree -> Int
+getNextId (Tree nodes) = M.size nodes + 1
+
 loadFile :: FilePath -> IO Tree
-loadFile path = return
-              $ addNode (Node 2 "" "import qualified Data.Map as M")
-              $ addNode (Node 1 "" "module NodeEditor where")
-              $ emptyTree
+loadFile path = do
+    contents <- readFile path
+    return $ linesToTree (lines contents)
