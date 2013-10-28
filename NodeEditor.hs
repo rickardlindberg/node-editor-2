@@ -15,11 +15,11 @@ data Tree = Tree
 emptyTree :: Tree
 emptyTree = Tree M.empty
 
+getNode :: Int -> Tree -> Node
+getNode id (Tree nodes) = Node 0 "" "module NodeEditor where"
+
 addNode :: Node -> Tree -> Tree
 addNode node (Tree nodes) = Tree (M.insert (nodeId node) node nodes)
 
-main = do
-    let foo = Node 1 "foo" "I am the foo node"
-    let bar = Node 2 "bar" "I am the bar node"
-    let tree = addNode bar $ addNode foo $ emptyTree
-    print tree
+loadFile :: FilePath -> IO Tree
+loadFile path = return emptyTree
