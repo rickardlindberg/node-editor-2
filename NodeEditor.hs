@@ -28,16 +28,25 @@ addNode node (Tree nodes) = Tree (M.insert (nodeId node) node nodes)
 
 linesToTree :: [String] -> Tree
 linesToTree [] = emptyTree
-linesToTree (line:restLines) =
-    let restTree = linesToTree restLines
-        body = extractBodyFromList(line:restLines)
-    in if line == ""
-        then restTree
-        else addNode (Node (getNextId restTree) "" (fst body)) restTree
+linesToTree (lines) =
+    let (nodeBody, restLines) = extractBodyFromList(lines)
+        restTree = linesToTree restLines
+    in
+        addNode (Node (getNextId restTree) "" nodeBody) restTree
 
 extractBodyFromList :: [String] -> (String, [String])
 extractBodyFromList lines =
-  ((intercalate "\n" (takeWhile (\line -> not $ null line) lines)), [])
+  let bodyLines = (takeWhile (\line -> not $ null line) lines)
+  in
+    ((intercalate "\n" bodyLines), (dropEmptyLines (dropNonEmptyChunk lines)))
+
+dropNonEmptyChunk :: [String] -> [String]
+dropNonEmptyChunk lines =
+  dropWhile (\line -> not (null line)) lines
+
+dropEmptyLines :: [String] -> [String]
+dropEmptyLines lines =
+  dropWhile (\line -> null line) lines
 
 getNextId :: Tree -> Int
 getNextId (Tree nodes) = M.size nodes + 1
