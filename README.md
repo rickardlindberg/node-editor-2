@@ -29,6 +29,14 @@ the same machine. They will communicate with ZeroMQ.
 
 ![](doc/distributed_editing.png?raw=true)
 
+API
+---
+
+- `add_node`
+- `delete_node`
+- `move_node`
+- `edit_node`
+
 Cross-language
 --------------
 
