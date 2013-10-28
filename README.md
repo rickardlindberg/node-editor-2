@@ -11,3 +11,5 @@ Experimental outliner/IDE.
 
 Distributed editing
 -------------------
+
+![](doc/distributed_editing.png?raw=true)
