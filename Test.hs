@@ -27,6 +27,15 @@ main = hspec $ do
             let tree = linesToTree lines
             treeContainsNodeWithBody "line one" tree `shouldBe` True
             treeContainsNodeWithBody "line two" tree `shouldBe` True
+        it "groups lines together that aren't separated by a whitespace"  $ do
+            let lines = [ "line one"
+                        , "line two"
+                        , ""
+                        , "line three"
+                        ]
+            let tree = linesToTree lines
+
+            treeContainsNodeWithBody "line one\nline two" tree `shouldBe` True
 
 treeContainsNodeWithBody :: String -> Tree -> Bool
 treeContainsNodeWithBody bodyToLookFor (Tree nodes) =

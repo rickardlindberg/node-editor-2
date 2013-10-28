@@ -2,6 +2,8 @@ module NodeEditor where
 
 import qualified Data.Map as M
 
+import Data.List
+
 data Node = Node
     { nodeId :: Int
     , title :: String
@@ -28,9 +30,14 @@ linesToTree :: [String] -> Tree
 linesToTree [] = emptyTree
 linesToTree (line:restLines) =
     let restTree = linesToTree restLines
+        body = extractBodyFromList(line:restLines)
     in if line == ""
         then restTree
-        else addNode (Node (getNextId restTree) "" line) restTree
+        else addNode (Node (getNextId restTree) "" (fst body)) restTree
+
+extractBodyFromList :: [String] -> (String, [String])
+extractBodyFromList lines =
+  ((intercalate "\n" (takeWhile (\line -> not $ null line) lines)), [])
 
 getNextId :: Tree -> Int
 getNextId (Tree nodes) = M.size nodes + 1
