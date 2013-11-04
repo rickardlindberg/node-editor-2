@@ -17,6 +17,12 @@ main = hspec $ do
             tree <- loadFile "NodeEditor.hs"
             treeContainsNodeWithBody "import qualified Data.Map as M" tree `shouldBe` True
 
+    it "read write roundtrip" $ do
+        let src = "a\n\nb\n\ncd\n"
+        let tree = loadFromText src
+        let output = writeToText tree
+        output `shouldBe` src
+
     describe "lines to tree conversion" $ do
 
         it "can convert" $ do

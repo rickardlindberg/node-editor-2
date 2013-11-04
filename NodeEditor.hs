@@ -55,3 +55,9 @@ loadFile :: FilePath -> IO Tree
 loadFile path = do
     contents <- readFile path
     return $ linesToTree (lines contents)
+
+loadFromText :: String -> Tree
+loadFromText text = undefined
+
+writeToText :: Tree -> String
+writeToText tree = undefined
