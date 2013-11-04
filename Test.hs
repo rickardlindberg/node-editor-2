@@ -3,6 +3,9 @@ import qualified Data.Map as M
 import Test.Hspec
 
 import NodeEditor
+import Data
+import Parser
+import Writer
 
 main :: IO ()
 main = hspec $ do
@@ -17,11 +20,28 @@ main = hspec $ do
             tree <- loadFile "NodeEditor.hs"
             treeContainsNodeWithBody "import qualified Data.Map as M" tree `shouldBe` True
 
-    it "read write roundtrip" $ do
-        let src = "a\n\nb\n\ncd\n"
-        let tree = loadFromText src
-        let output = writeToText tree
-        output `shouldBe` src
+    describe "Modifying nodes" $ do
+      it "Can be done." $ do
+        let tree = treeFromText "node body"
+        let newTree = setNodeBody tree 1 "woho"
+        toText newTree `shouldBe` "woho"
+
+      it "actually, for real this time, can be done" $ do
+        let tree = treeFromText "node body"
+        let newTree = setNodeBody tree 1 "fosho"
+        toText newTree `shouldBe` "fosho"
+
+    describe "Converting a string to text" $ do
+      it "Works with a single node!" $ do
+          let src = "cd"
+          let tree = treeFromText src
+          let output = toText tree
+          output `shouldBe` src
+      it "Works with two nodes!" $ do
+          let src = "a\n\ncd"
+          let tree = treeFromText src
+          let output = toText tree
+          output `shouldBe` src
 
     describe "lines to tree conversion" $ do
 
