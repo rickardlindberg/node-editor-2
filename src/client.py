@@ -10,8 +10,8 @@ class Client(object):
 
     def run(self):
         self._init_zmq()
-        self._fetch_nodes_from_server()
         while True:
+            self._fetch_nodes_from_server()
             self._print_node_list()
             self._get_input()
 
@@ -42,7 +42,8 @@ class Client(object):
         subprocess.call(["vim", tmp_path])
         print("Saving...")
         with open(tmp_path, "r") as f:
-            node["body"] = f.read()
+            self.socket.send(json.dumps({"command":"edit_body","id":node["id"],"body":f.read()}))
+            print(self.socket.recv())
 
     def _get_node_with_id(self, id):
         for node in self.nodes:
