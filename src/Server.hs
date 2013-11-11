@@ -19,7 +19,7 @@ main :: IO ()
 main = runZMQ $ do
     replySocket <- socket Rep
     bind replySocket "tcp://*:5555"
-    let initialTree = linesToTree ["line one"]
+    initialTree <- liftIO $ loadFile "sandbox"
     serverLoop replySocket initialTree
 
 serverLoop replySocket tree = do
@@ -30,7 +30,10 @@ serverLoop replySocket tree = do
             serverLoop replySocket tree
         Just (EditBody id body) -> do
             send replySocket [] "{\"status\": true}"
-            serverLoop replySocket (setNodeBody tree id body)
+            let newTree = setNodeBody tree id body
+            liftIO $ saveFile "sandbox" newTree
+            serverLoop replySocket newTree
+
         _ -> do
             send replySocket [] "{\"status\": false}"
             serverLoop replySocket tree
