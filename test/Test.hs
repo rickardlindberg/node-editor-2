@@ -83,6 +83,8 @@ main = hspec $ do
           let src = "one\n\n\ntwo"
           toText (treeFromText src) `shouldBe` src
 
+        it "Persists trailing whitespace properly" $ pending
+
     describe "serialization to json" $ do
 
         it "works for nodes" $ do
