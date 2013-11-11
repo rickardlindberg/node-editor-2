@@ -1,7 +1,8 @@
-module Parser where
+module NodeEditor.Parser where
 
-import Data
 import Data.List
+
+import NodeEditor.Data
 
 dropNonEmptyChunk :: [String] -> [String]
 dropNonEmptyChunk lines =

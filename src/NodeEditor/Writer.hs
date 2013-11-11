@@ -1,10 +1,9 @@
-module Writer where
+module NodeEditor.Writer where
 
+import Data.List
 import qualified Data.Map as M
 
-import Data
-import Data.List
-
+import NodeEditor.Data
 
 toText :: Tree -> String
 toText tree =

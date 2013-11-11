@@ -1,5 +1,7 @@
 {-# LANGUAGE BangPatterns #-}
 
+module NodeEditor.CLI where
+
 import NodeEditor
 
 import qualified Data.Map as M

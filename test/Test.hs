@@ -4,10 +4,10 @@ import qualified Data.Map as M
 
 import Test.Hspec
 
-import Data
-import Parser
-import Serialize
-import Writer
+import NodeEditor.Data
+import NodeEditor.Parser
+import NodeEditor.Serialize
+import NodeEditor.Writer
 
 main :: IO ()
 main = hspec $ do
@@ -15,11 +15,11 @@ main = hspec $ do
     describe "Node editor" $ do
 
         it "can read nodes from file" $ do
-            tree <- loadFile "NodeEditor.hs"
-            treeContainsNodeWithBody "module NodeEditor where" tree `shouldBe` True
+            tree <- loadFile "src/NodeEditor/NodeEditor.hs"
+            treeContainsNodeWithBody "module NodeEditor.NodeEditor where" tree `shouldBe` True
 
         it "can read nodes from file" $ do
-            tree <- loadFile "NodeEditor.hs"
+            tree <- loadFile "src/NodeEditor/NodeEditor.hs"
             treeContainsNodeWithBody "import qualified Data.Map as M" tree `shouldBe` True
 
     describe "Modifying nodes" $ do
