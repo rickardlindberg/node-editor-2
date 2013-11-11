@@ -1,2 +1,2 @@
 #!/bin/sh
-ghc --make -isrc src/Server.hs && ./src/Server
+ghc --make -isrc src/Server.hs -outputdir bin -o bin/Server && ./bin/Server
