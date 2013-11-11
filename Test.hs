@@ -5,7 +5,6 @@ import qualified Data.Map as M
 import Test.Hspec
 
 import Data
-import NodeEditor
 import Parser
 import Serialize
 import Writer

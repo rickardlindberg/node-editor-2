@@ -3,6 +3,7 @@
 module Serialize where
 
 import qualified Data.ByteString.Lazy.Char8 as BL
+import qualified Data.ByteString.Char8 as B
 
 import Data.Aeson
 
@@ -13,5 +14,5 @@ instance ToJSON Node where
                          , "body" .= body node
                          ]
 
-toJson :: [Node] -> BL.ByteString
-toJson nodes = encode nodes
+toJson :: [Node] -> B.ByteString
+toJson = B.concat . BL.toChunks . encode
