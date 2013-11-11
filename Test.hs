@@ -1,10 +1,13 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 import qualified Data.Map as M
 
 import Test.Hspec
 
-import NodeEditor
 import Data
+import NodeEditor
 import Parser
+import Serialize
 import Writer
 
 main :: IO ()
@@ -21,27 +24,30 @@ main = hspec $ do
             treeContainsNodeWithBody "import qualified Data.Map as M" tree `shouldBe` True
 
     describe "Modifying nodes" $ do
-      it "Can be done." $ do
-        let tree = treeFromText "node body"
-        let newTree = setNodeBody tree 1 "woho"
-        toText newTree `shouldBe` "woho"
 
-      it "actually, for real this time, can be done" $ do
-        let tree = treeFromText "node body"
-        let newTree = setNodeBody tree 1 "fosho"
-        toText newTree `shouldBe` "fosho"
+        it "Can be done." $ do
+            let tree = treeFromText "node body"
+            let newTree = setNodeBody tree 1 "woho"
+            toText newTree `shouldBe` "woho"
+
+        it "actually, for real this time, can be done" $ do
+            let tree = treeFromText "node body"
+            let newTree = setNodeBody tree 1 "fosho"
+            toText newTree `shouldBe` "fosho"
 
     describe "Converting a string to text" $ do
-      it "Works with a single node!" $ do
-          let src = "cd"
-          let tree = treeFromText src
-          let output = toText tree
-          output `shouldBe` src
-      it "Works with two nodes!" $ do
-          let src = "a\n\ncd"
-          let tree = treeFromText src
-          let output = toText tree
-          output `shouldBe` src
+
+        it "Works with a single node!" $ do
+            let src = "cd"
+            let tree = treeFromText src
+            let output = toText tree
+            output `shouldBe` src
+
+        it "Works with two nodes!" $ do
+            let src = "a\n\ncd"
+            let tree = treeFromText src
+            let output = toText tree
+            output `shouldBe` src
 
     describe "lines to tree conversion" $ do
 
@@ -73,6 +79,13 @@ main = hspec $ do
             let tree = linesToTree lines
 
             treeContainsNodeWithBody "line two" tree `shouldBe` False
+
+    describe "serialization to json" $ do
+
+        it "works for nodes" $ do
+            toJson (topLevelNodes $ linesToTree ["line one"])
+            `shouldBe`
+            "[{\"body\":\"line one\",\"id\":1}]"
 
 treeContainsNodeWithBody :: String -> Tree -> Bool
 treeContainsNodeWithBody bodyToLookFor (Tree nodes) =

@@ -15,6 +15,9 @@ data Tree = Tree
 emptyTree :: Tree
 emptyTree = Tree M.empty
 
+topLevelNodes :: Tree -> [Node]
+topLevelNodes (Tree nodes) = M.elems nodes
+
 addNode :: Node -> Tree -> Tree
 addNode node (Tree nodes) = Tree (M.insert (nodeId node) node nodes)
 
