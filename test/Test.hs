@@ -79,6 +79,10 @@ main = hspec $ do
 
             treeContainsNodeWithBody "line two" tree `shouldBe` False
 
+        it "Persists additional whitespace properly"  $ do
+          let src = "one\n\n\ntwo"
+          toText (treeFromText src) `shouldBe` src
+
     describe "serialization to json" $ do
 
         it "works for nodes" $ do

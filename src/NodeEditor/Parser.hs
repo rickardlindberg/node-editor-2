@@ -4,13 +4,6 @@ import Data.List
 
 import NodeEditor.Data
 
-dropNonEmptyChunk :: [String] -> [String]
-dropNonEmptyChunk lines =
-  dropWhile (\line -> not (null line)) lines
-
-dropEmptyLines :: [String] -> [String]
-dropEmptyLines lines =
-  dropWhile (\line -> null line) lines
 
 linesToTree :: [String] -> Tree
 linesToTree [] = emptyTree
@@ -22,9 +15,16 @@ linesToTree (lines) =
 
 extractBodyFromList :: [String] -> (String, [String])
 extractBodyFromList lines =
-  let bodyLines = (takeWhile (\line -> not $ null line) lines)
+  let
+      (nodePrefix, potentialNodeContent) = extractAsLongAs null lines
+      (nodeContent, remainderOfList) = extractAsLongAs (not . null) potentialNodeContent
+      fullNodeBody = nodePrefix ++ nodeContent
+      startOfNextBody = drop 1 remainderOfList
   in
-    ((intercalate "\n" bodyLines), (dropEmptyLines (dropNonEmptyChunk lines)))
+    (intercalate "\n" fullNodeBody, startOfNextBody)
+
+extractAsLongAs :: (a -> Bool) -> [a] -> ([a], [a])
+extractAsLongAs condition list = (takeWhile condition list, dropWhile condition list)
 
 treeFromText :: String -> Tree
 treeFromText text =
