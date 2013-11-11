@@ -15,11 +15,11 @@ main = hspec $ do
     describe "Node editor" $ do
 
         it "can read nodes from file" $ do
-            tree <- loadFile "src/NodeEditor/NodeEditor.hs"
-            treeContainsNodeWithBody "module NodeEditor.NodeEditor where" tree `shouldBe` True
+            tree <- loadFile "src/Server.hs"
+            treeContainsNodeWithBody "import qualified Data.Map as M" tree `shouldBe` True
 
         it "can read nodes from file" $ do
-            tree <- loadFile "src/NodeEditor/NodeEditor.hs"
+            tree <- loadFile "src/Server.hs"
             treeContainsNodeWithBody "import qualified Data.Map as M" tree `shouldBe` True
 
     describe "Modifying nodes" $ do

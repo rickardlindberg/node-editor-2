@@ -1,17 +1,15 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module NodeEditor.NodeEditor where
-
 import qualified Data.Map as M
 
-import Data
 import Data.Maybe
 import Data.List
 import Data.Ord
 
+import NodeEditor.Data
 import NodeEditor.Parser
-import NodeEditor.Writer
 import NodeEditor.Serialize
+import NodeEditor.Writer
 
 import System.ZMQ3.Monadic
 import Control.Monad (forever)
