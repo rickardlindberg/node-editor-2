@@ -86,6 +86,20 @@ main = hspec $ do
             `shouldBe`
             "[{\"body\":\"line one\",\"id\":1}]"
 
+    describe "deserialization from json" $ do
+
+        describe "for commands" $ do
+
+            it "top level nodes" $ do
+                fromJson "{\"command\":\"get_top_level_nodes\"}"
+                `shouldBe`
+                Just GetTopLevelNodes
+
+            it "edit body" $ do
+                fromJson "{\"command\":\"edit_body\",\"body\":\"hello\",\"id\":1}"
+                `shouldBe`
+                (Just $ EditBody 1 "hello")
+
 treeContainsNodeWithBody :: String -> Tree -> Bool
 treeContainsNodeWithBody bodyToLookFor (Tree nodes) =
     not $ M.null $ M.filter (\node -> body node == bodyToLookFor) nodes
