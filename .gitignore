@@ -1,4 +1,4 @@
-test/Test
+bin/Test
 bin/Server
 *.hi
 *.o
