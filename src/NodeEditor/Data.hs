@@ -35,6 +35,8 @@ setNodeBody tree nodeId nodeBody = Tree newNodes
   where
     newNodes = M.alter (swapNodeBody nodeBody) nodeId (nodes tree)
 
+getNodeBody :: Tree -> Int -> String
+getNodeBody tree nodeId = body (getNode nodeId tree)
 
 swapNodeBody :: String -> Maybe Node -> Maybe Node
 swapNodeBody newBody (Just node) =
@@ -42,3 +44,7 @@ swapNodeBody newBody (Just node) =
 
 swapNodeBody body Nothing =
   Nothing
+
+treeContainsNodeWithBody :: String -> Tree -> Bool
+treeContainsNodeWithBody bodyToLookFor (Tree nodes) =
+    not $ M.null $ M.filter (\node -> body node == bodyToLookFor) nodes
