@@ -9,8 +9,12 @@ import NodeEditor.Parser
 import NodeEditor.Serialize
 import NodeEditor.Writer
 
+import TestParsingTextIntoATree
+
 main :: IO ()
 main = hspec $ do
+
+    parsingTextToTreeSpecs
 
     describe "Node editor" $ do
 
@@ -23,15 +27,9 @@ main = hspec $ do
             treeContainsNodeWithBody "import qualified Data.Map as M" tree `shouldBe` True
 
     describe "Modifying nodes" $ do
-
-        it "Can be done." $ do
+        it "Can be done" $ do
             let tree = treeFromText "node body"
-            let newTree = setNodeBody tree 1 "woho"
-            toText newTree `shouldBe` "woho"
-
-        it "actually, for real this time, can be done" $ do
-            let tree = treeFromText "node body"
-            let newTree = setNodeBody tree 1 "fosho"
+            let newTree = setNodeBody tree 0 "fosho"
             toText newTree `shouldBe` "fosho"
 
     describe "Converting a string to text" $ do
@@ -48,49 +46,21 @@ main = hspec $ do
             let output = toText tree
             output `shouldBe` src
 
-    describe "lines to tree conversion" $ do
-
-        it "can convert" $ do
-            let lines = [ "line one"
-                        , ""
-                        , "line two"
-                        ]
-            let tree = linesToTree lines
-            treeContainsNodeWithBody "line one" tree `shouldBe` True
-            treeContainsNodeWithBody "line two" tree `shouldBe` True
-
-        it "groups lines together that aren't separated by a whitespace"  $ do
-            let lines = [ "line one"
-                        , "line two"
-                        , ""
-                        , "line three"
-                        ]
-            let tree = linesToTree lines
-
-            treeContainsNodeWithBody "line one\nline two" tree `shouldBe` True
-
-        it "doesn't duplicate the additional lines"  $ do
-            let lines = [ "line one"
-                        , "line two"
-                        , ""
-                        , "line three"
-                        ]
-            let tree = linesToTree lines
-
-            treeContainsNodeWithBody "line two" tree `shouldBe` False
-
+    describe "converting a tree to and from text" $ do
         it "Persists additional whitespace properly"  $ do
           let src = "one\n\n\ntwo"
           toText (treeFromText src) `shouldBe` src
 
-        it "Persists trailing whitespace properly" $ pending
+        it "Persists trailing whitespace properly" $ do
+          let src = "one\n\n\ntwo\n\n"
+          toText (treeFromText src) `shouldBe` src
 
     describe "serialization to json" $ do
 
         it "works for nodes" $ do
-            toJson (topLevelNodes $ linesToTree ["line one"])
+            toJson (topLevelNodes $ treeFromText "line one")
             `shouldBe`
-            "[{\"body\":\"line one\",\"id\":1}]"
+            "[{\"body\":\"line one\",\"id\":0}]"
 
     describe "deserialization from json" $ do
 
@@ -105,7 +75,3 @@ main = hspec $ do
                 fromJson "{\"command\":\"edit_body\",\"body\":\"hello\",\"id\":1}"
                 `shouldBe`
                 (Just $ EditBody 1 "hello")
-
-treeContainsNodeWithBody :: String -> Tree -> Bool
-treeContainsNodeWithBody bodyToLookFor (Tree nodes) =
-    not $ M.null $ M.filter (\node -> body node == bodyToLookFor) nodes
